@@ -13,13 +13,14 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 // 每次在请求之前，获取token信息 ，追加在headers中
 // 请求拦截器：在每次请求前做某些事
 axios.interceptors.request.use((config) => {
-  config.hesders = {
+  config.headers = {
     Authorization: `Bearer ${store.getUser().token}`
   }
   return config
 }, (error) => {
   return Promise.reject(error)
 })
+
 // 响应器拦截：每次次响应后做某一些事情
 axios.interceptors.response.use((res) => {
   return res

@@ -3,11 +3,12 @@
     <el-card class="my-card">
       <img src="../../assets/images/logo_index.png" alt />
       <!-- 表单 -->
-      <el-form ref="loginForm" :rules="loginRules" :model="loginForm" status-icon>
-        <el-form-item prop="mobile">
+      <el-form ref="loginForm" :rules="loginRules" :model="loginForm" status-icon> <!--status-icon他是验证过后成功后有一个对号的标识，错误报一个红X-->
+        <!-- loginRules这个就是下面校验的格式     loginForm自定义的名称可以写成其他的 -->
+        <el-form-item prop="mobile"> <!--mobile这个是后台服务器的参数，必须是这个字段，写其他的提交不了数据-->
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item prop="code">
+        <el-form-item prop="code"><!--这个跟mobile是一样的都是后台服务器的参数-->
           <el-input
             v-model="loginForm.code"
             placeholder="请输入验证码"
@@ -16,9 +17,11 @@
           <el-button>发送验证码</el-button>
         </el-form-item>
         <el-form-item>
+          <!-- :value="true"他是默认勾选，如果不写这个没有勾选的样式 -->
           <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
+          <!-- type="primary"这个是背景色 -->
           <el-button type="primary" style="width:100%" @click="login()">登 录</el-button>
         </el-form-item>
       </el-form>
@@ -27,13 +30,16 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     // 申明校验函数
     const checkMobile = (rule, value, callback) => {
-      // 校验手机号  1开头 第二位3-9  9位数字
+      // 校验手机号  1开头 第二位3-9  9位数字 ^这个表示起始位置  1代表第一个数字  [3-9]代表第二个数字只要在这个范围的都可以的
+      //    \d{9}表示后面9位数字 \d是匹配数字 $表示结束
+      // 这个判断表示如果不是这样的报错弹出手机号格式不对
       if (!/^1[3-9]\d{9}$/.test(value)) { return callback(new Error('手机号格式不对')) }
-      callback()
+      callback()// 这个回调函数表示验证成功
     }
     return {
       // 表单对象数据
@@ -44,12 +50,12 @@ export default {
       // 表单校验规则数据
       loginRules: {
         mobile: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { validator: checkMobile, trigger: 'blur' }
+          { required: true, message: '请输入手机号', trigger: 'blur' }, // 这个是验证输入框中是否有值
+          { validator: checkMobile, trigger: 'blur' }// 这个是用正则表达式判断手机号的格式，不符合报错
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
-          { len: 6, message: '长度是6位', trigger: 'blur' }
+          { required: true, message: '请输入验证码', trigger: 'blur' }, // 这个是验证输入框中是否有值
+          { len: 6, message: '长度是6位', trigger: 'blur' }// 验证码的长度必须是6位数字，不能多也不能少
         ]
       }
     }
@@ -67,7 +73,9 @@ export default {
             )
             .then(res => {
               // res 响应对象   包含响应主体
-              console.log(res.data)
+              // console.log(res.data)
+              // 存储用户信息
+              store.setUser(res.data.data)
               // 跳转去首页
               this.$router.push('/')
             })

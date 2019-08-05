@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+     <!-- 一级路由的出口  显示组件位置 -->
    <router-view></router-view>
   </div>
 </template>
@@ -11,6 +12,6 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 
 </style>

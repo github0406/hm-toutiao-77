@@ -6,6 +6,10 @@ import '@/style/index.less'
 import router from '@/router'// 引入路由
 
 import axios from '@/api'// 引入axios 他是用来调用后台数据的接口的
+
+import myCom from '@/components'
+Vue.use(myCom)
+
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
